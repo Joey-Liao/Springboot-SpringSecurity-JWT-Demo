@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * Created by echisan on 2018/6/23
+ * 授权
  */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 

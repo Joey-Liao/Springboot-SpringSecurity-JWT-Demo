@@ -44,7 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeRequests()
+//                .requestMatchers()//用于规定哪些路径我需要拦截，精确指定请求匹配规则，如特定URL路径、请求方法、请求参数等。
+//                .antMatchers("/api/**") // 仅匹配 /api/** 路径的请求
+//                .and()
+                .authorizeRequests()//基于请求匹配规则来定义访问控制策略。该方法允许您为特定的请求路径或请求模式指定访问要求，如需要特定角色或权限才能访问。
                 .antMatchers(HttpMethod.DELETE, "/tasks/**").hasRole("ADMIN")
                 // 测试用资源，需要验证了的用户才能访问
                 .antMatchers("/tasks/**").authenticated()

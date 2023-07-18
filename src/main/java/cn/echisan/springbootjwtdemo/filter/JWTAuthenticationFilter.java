@@ -4,7 +4,9 @@ import cn.echisan.springbootjwtdemo.entity.JwtUser;
 import cn.echisan.springbootjwtdemo.model.LoginUser;
 import cn.echisan.springbootjwtdemo.utils.JwtTokenUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by echisan on 2018/6/23
+ * 认证
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -35,8 +37,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
+        //1.判断是否是 post 方式请求
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
+        //2.判断是否是 json 格式请求类型
+        if (!request.getContentType().equalsIgnoreCase(MediaType.APPLICATION_JSON_VALUE)) {
+            throw new AuthenticationServiceException("Not Json String: " + request.getMethod());
+        }
+        // 从输入流中获取到登录的信息{"uname":"xxx","password":"xxx","remember-me":true}
 
-        // 从输入流中获取到登录的信息
         try {
             LoginUser loginUser = new ObjectMapper().readValue(request.getInputStream(), LoginUser.class);
             rememberMe.set(loginUser.getRememberMe() == null ? 0 : loginUser.getRememberMe());

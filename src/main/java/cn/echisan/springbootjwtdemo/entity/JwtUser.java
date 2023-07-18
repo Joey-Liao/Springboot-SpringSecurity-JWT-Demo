@@ -7,14 +7,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * Created by echisan on 2018/6/23
- */
+
 public class JwtUser implements UserDetails {
 
+    //这里可以自定义自己的属性
     private Integer id;
     private String username;
     private String password;
+    //这里的GrantedAuthority可以自定义子类
+    //private List<Role> roles = new ArrayList<>();
+
     private Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser() {
@@ -25,13 +27,20 @@ public class JwtUser implements UserDetails {
         id = user.getId();
         username = user.getUsername();
         password = user.getPassword();
+        //roles.add(new Role(1,user.getRole(),user.getRole()));
         authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
     }
 
-    @Override
+    //    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//        roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+//        return grantedAuthorities;
+//    }
 
     @Override
     public String getPassword() {
